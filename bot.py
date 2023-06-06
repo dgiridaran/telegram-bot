@@ -35,11 +35,14 @@ async def handle_message(update:Update, context: ContextTypes.DEFAULT_TYPE):
             return
     elif 'http' in text:
         response = download_file(text)
-        title = response
-        with open(title+'.mp4','rb') as r:
-            await update.message.reply_video(r)
-        if os.path.exists(title+'.mp4'):
-            os.remove(title+'.mp4')
+        title = response[0]
+        with open(title+response[1],'rb') as r:
+            if response[1] == '.mp4':
+                await update.message.reply_video(r)
+            elif response[1] == '.png':
+                await update.message.reply_photo(r)
+        if os.path.exists(title+response[1]):
+            os.remove(title+response[1])
         else:
             print("The file does not exist")
         
